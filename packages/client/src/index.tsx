@@ -1,16 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import Routes from './routes';
 import { ApolloProvider } from 'react-apollo';
+
+import './index.css';
 
 import * as serviceWorker from './serviceWorker';
 import apolloClient from './apollo';
 
 ReactDOM.render(
-  <ApolloProvider>
-    <App />
+  <ApolloProvider client={apolloClient}>
+    <Routes />
   </ApolloProvider>,
-
   document.getElementById('root')
 );
 
