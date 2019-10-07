@@ -1,0 +1,16 @@
+{
+  "name": "@abb/common",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "scripts": {
+    "build": "rm -rf ./dist/ && tsc"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/yup": "^0.26.24",
+    "tslint": "^5.20.0",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.6.3"
+  }
+}
