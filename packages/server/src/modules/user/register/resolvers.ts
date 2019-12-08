@@ -1,55 +1,52 @@
-import { ResolverMap } from "../../../types/graphql-utils";
-import { User } from "../../../entity/User";
-import { formatYupError } from "../../../utils/formatYupError";
-import { duplicateEmail } from "./errorMessages";
-import { userValidationSchema } from "@abb/common";
-// import { createConfirmEmailLink } from "../../utils/createConfirmEmailLink";
-// import { sendEmail } from "../../utils/sendEmail";
+import { ResolverMap } from '../../../types/graphql-utils';
+import { User } from '../../../entity/User';
+import { formatYupError } from '../../../utils/formatYupError';
+import { duplicateEmail } from './errorMessages';
+import { userValidationSchema } from '@abb/common';
+import { createConfirmEmailLink } from '../../utils/createConfirmEmailLink';
+import { sendEmail } from '../../utils/sendEmail';
 
 export const resolvers: ResolverMap = {
-  Mutation: {
-    register: async (
-      _,
-      args: GQL.IRegisterOnMutationArguments
-      // { redis, url }
-    ) => {
-      try {
-        await userValidationSchema.validate(args, { abortEarly: false });
-      } catch (err) {
-        return formatYupError(err);
-      }
+	Mutation: {
+		register: async (
+			_,
+			args: GQL.IRegisterOnMutationArguments
+			// { redis, url }
+		) => {
+			try {
+				await userValidationSchema.validate(args, { abortEarly: false });
+			} catch (err) {
+				return formatYupError(err);
+			}
 
-      const { email, password } = args;
+			const { email, password } = args;
 
-      const userAlreadyExists = await User.findOne({
-        where: { email },
-        select: ["id"]
-      });
+			const userAlreadyExists = await User.findOne({
+				where: { email },
+				select: ['id'],
+			});
 
-      if (userAlreadyExists) {
-        return [
-          {
-            path: "email",
-            message: duplicateEmail
-          }
-        ];
-      }
+			if (userAlreadyExists) {
+				return [
+					{
+						path: 'email',
+						message: duplicateEmail,
+					},
+				];
+			}
 
-      const user = User.create({
-        email,
-        password
-      });
+			const user = User.create({
+				email,
+				password,
+			});
 
-      await user.save();
+			await user.save();
 
-      // if (process.env.NODE_ENV !== "test") {
-      //   await sendEmail(
-      //     email,
-      //     await createConfirmEmailLink(url, user.id, redis)
-      //   );
-      // }
+			if (process.env.NODE_ENV !== 'test') {
+				await sendEmail(email, await createConfirmEmailLink(url, user.id, redis));
+			}
 
-      return null;
-    }
-  }
+			return null;
+		},
+	},
 };
