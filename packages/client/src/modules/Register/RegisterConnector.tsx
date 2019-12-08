@@ -1,20 +1,22 @@
-import React, { FC } from "react";
-import RegisterView from "./view/RegisterView";
+import React, { FC } from 'react';
+import { RegisterController } from '@abb/controller';
+
+import RegisterView from './view/RegisterView';
+
+// container -> view
+// container -> connector -> view
+// controller -> connector -> view
 
 export interface RegisterProps {}
 
 const Register: FC<RegisterProps> = () => {
-  const dummySubmit = (values: any) => {
-    console.log(values);
-
-    return Promise.resolve(values);
-  };
-
-  return (
-    <section>
-      <RegisterView submit={dummySubmit} />
-    </section>
-  );
+	return (
+		<section>
+			<RegisterController>
+				{({ submit }) => <RegisterView submit={submit} />}
+			</RegisterController>
+		</section>
+	);
 };
 
 export default Register;
